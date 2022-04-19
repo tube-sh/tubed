@@ -19,14 +19,16 @@ var (
   stop — fast shutdown
   reload — reloading the configuration file`)
 )
-
+wget
 func main() {
+
 	flag.Parse()
 	daemon.AddCommand(daemon.StringFlag(signal, "quit"), syscall.SIGQUIT, termHandler)
 	daemon.AddCommand(daemon.StringFlag(signal, "stop"), syscall.SIGTERM, termHandler)
 	daemon.AddCommand(daemon.StringFlag(signal, "reload"), syscall.SIGHUP, reloadHandler)
 
 	runDaemon()
+
 }
 
 func runDaemon() {

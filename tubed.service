@@ -1,0 +1,12 @@
+[Unit]
+Description=Tubed
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/tubed
+ExecStop=/usr/bin/tubed -s stop
+User=tubed
+Group=tubed
+
+[Install]
+WantedBy=multi-user.target
