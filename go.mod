@@ -1,4 +1,4 @@
-module example/go-daemon
+module github.com/tube-sh/tubed
 
 go 1.18
 

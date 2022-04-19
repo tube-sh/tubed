@@ -2,12 +2,13 @@ package main
 
 import (
 	"flag"
-	"github.com/sevlyar/go-daemon"
 	"log"
 	"os"
+	"os/exec"
 	"syscall"
 	"time"
-	"os/exec"
+
+	"github.com/sevlyar/go-daemon"
 )
 
 var pid int
@@ -25,6 +26,10 @@ func main() {
 	daemon.AddCommand(daemon.StringFlag(signal, "stop"), syscall.SIGTERM, termHandler)
 	daemon.AddCommand(daemon.StringFlag(signal, "reload"), syscall.SIGHUP, reloadHandler)
 
+	runDaemon()
+}
+
+func runDaemon() {
 	cntxt := &daemon.Context{
 		PidFileName: "sample.pid",
 		PidFilePerm: 0644,
@@ -54,7 +59,7 @@ func main() {
 	defer cntxt.Release()
 
 	log.Println("- - - - - - - - - - - - - - -")
-	log.Println("daemon started")
+	log.Println("tubed daemon started")
 
 	go worker()
 
@@ -63,7 +68,7 @@ func main() {
 		log.Printf("Error: %s", err.Error())
 	}
 
-	log.Println("daemon terminated")
+	log.Println("tubed daemon terminated")
 }
 
 var (
@@ -72,16 +77,16 @@ var (
 )
 
 func worker() {
-	cmd := exec.Command("./test.sh")
-	//cmd.Stdout = os.Stdout
+	cmd := exec.Command("frpc", "-c", "/etc/frp/frpc.ini")
+	cmd.Stdout = os.Stdout
 	err := cmd.Start()
 	if err != nil {
-	   log.Fatal(err)
+		log.Fatal(err)
 	}
 	pid = cmd.Process.Pid
 	log.Printf("frpc subprocess pid is %d\n", cmd.Process.Pid)
-	
-	LOOP:
+
+LOOP:
 	for {
 		// check if frpc pid ok (api call + pid)
 		// get tunnel updates
