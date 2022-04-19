@@ -25,7 +25,7 @@ func getTunnelConfig(token string) {
 
 	// build tube bootstrap URL
 	url := "http://127.0.0.1:8000/tunnelbootstrap"
-
+cur
 	// build body
 	jsonBody, _ := json.Marshal(map[string]string{
 		"tunnel_token": token,
